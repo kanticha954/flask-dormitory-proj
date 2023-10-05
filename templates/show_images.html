@@ -30,8 +30,9 @@
     <div class="container mt-5">
     <h1>Generated Room Images</h1>
     <div class="image-container">
-        {% for image_path in image_paths %}
-        <img src="{{ url_for('download_file', filename=image_path) }}" alt="Room Image"><br>
+        {% for image_url in image_urls %}
+        <img src="{{ image_url }}" alt="Room Image"><br>
+        <br>
         {% endfor %}
     </div>
 </div>

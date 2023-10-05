@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, url_for
 from PIL import Image, ImageDraw, ImageFont
 import os
 from dotenv import load_dotenv
@@ -11,14 +11,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 load_dotenv()
 SHEET_NAME = "Kanticha Mansion"
-output_folder = "image"
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
+room_amount = 3
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'D:/1_Work/Python-Proj/flask-cal-dormitory/image'
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static/image')
 # Get data
 def get_client(sheet_name=SHEET_NAME):
     scope = [
@@ -39,7 +35,7 @@ def get_client(sheet_name=SHEET_NAME):
 
 @app.route("/")
 def index():
-    return render_template("add.html", room_count=3)
+    return render_template("add.html", room_count=room_amount)
 
 
 # create image
@@ -54,7 +50,7 @@ def create_image(
     total_cost,
 ):
     # image formatting
-    img = Image.open("image/format_pic.png")
+    img = Image.open("static/image/format_pic.png")
     d = ImageDraw.Draw(img)
     font = ImageFont.truetype("fonts/ChakraPetch-Medium.ttf", 18)  # ใช้ฟอนต์เริ่มต้น
     font_bold = ImageFont.truetype("fonts/ChakraPetch-Medium.ttf", 22)
@@ -82,9 +78,9 @@ def create_image(
     d.text((300, 385), f"{total_cost}", fill=(0, 0, 0), font=font)
 
     # save
-    save_folder = output_folder
-    save_path = os.path.join(save_folder, f"result_room_{room_number}.png")
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'], f"result_room_{room_number}.png")
     img.save(save_path)
+    img_url = url_for('static', filename=f"image/result_room_{room_number}.png")
 
     print("บันทึกรูปภาพเสร็จสิ้น")
     return save_path
@@ -212,9 +208,9 @@ def download_file(filename):
 
 @app.route('/show_images')
 def show_images():
-    room_count = 3
-    image_paths = [f'result_room_{room_number}.png' for room_number in range(1, room_count + 1)]
-    return render_template('show_images.html', image_paths=image_paths)
+    room_count = room_amount
+    image_urls = [url_for('download_file', filename=f'result_room_{room_number}.png') for room_number in range(1, room_count + 1)]
+    return render_template('show_images.html', image_urls=image_urls)
 
 
 #test function
