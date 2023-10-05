@@ -9,6 +9,7 @@ from datetime import datetime, date
 from pprint import pprint as pp
 from PIL import Image, ImageDraw, ImageFont
 
+load_dotenv()
 SHEET_NAME = "Kanticha Mansion"
 output_folder = "image"
 if not os.path.exists(output_folder):
