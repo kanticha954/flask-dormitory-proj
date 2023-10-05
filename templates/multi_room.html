@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คำนวณค่าน้ำและค่าไฟ</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+    <h1>กรอกข้อมูลค่าน้ำและค่าไฟ</h1>
+    <form action="/save" method="post">
+        <label for="room_count">จำนวนห้อง:</label>
+        <input type="number" id="room_count" name="room_count" value="{{ room_count }}" required><br>
+        <!-- สร้างฟิลด์กรอกข้อมูลสำหรับแต่ละห้อง -->
+        <table>
+            <tr>
+                <th>ห้อง</th>
+                <th>น้ำ (หน่วย)</th>
+                <th>ไฟ (หน่วย)</th>
+            </tr>
+        {% for room_number in range(1, room_count + 1) %}
+        <tr>
+                <td>ห้อง {{ room_number }}</td>
+                <td><input type="number" name="water_cost_{{ room_number }}" required></td>
+                <td><input type="number" name="electricity_cost_{{ room_number }}" required></td>
+                <td><button type="button" onclick="saveImage({{ room_number }})">บันทึกรูป</button></td>
+                <a href="/download/result_room_{{ room_number }}.png" download>ดาวน์โหลดรูปห้อง {{ room_number }}</a>
+
+            </tr>
+        {% endfor %}
+        </table>
+        <br>
+        <button type="submit">บันทึก</button>
+    </form>
+</body>
+
+</html>
+<script>
+    function saveImage(roomNumber) {
+        var room_count =  
+        formData.append('room_count', 1);
+        formData.append('room_number', roomNumber);
+        formData.append('water_cost_' + room_number, document.querySelector(`[name="water_cost_${roomNumber}"]`).value);
+        formData.append('electricity_cost_' + room_number, document.querySelector(`[name="electricity_cost_${roomNumber}"]`).value);
+
+        fetch('/save', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // ทำการประมวลผลข้อมูล JSON ตรงนี้
+        })
+        .catch(error => {
+            console.error('เกิดข้อผิดพลาด:', error);
+        });
+    }
+</script>

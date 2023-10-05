@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- ... (ส่วนหัว HTML) ... -->
+</head>
+
+<body>
+    <h1>ผลลัพธ์</h1>
+    <table>
+        <tr>
+            <th>ห้อง</th>
+            <th>ค่าน้ำ (บาท)</th>
+            <th>ค่าไฟ (บาท)</th>
+        </tr>
+        {% for room in room_data %}
+        <tr>
+            <td>{{ room.room_number }}</td>
+            <td>{{ room.water_cost }}</td>
+            <td>{{ room.electricity_cost }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>
